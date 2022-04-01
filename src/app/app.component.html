@@ -1,0 +1,28 @@
+<div class="mainWrapper">
+    <div class="header">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <a class="navbar-brand" routerLink="/">Stock Search</a>
+            <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">
+                &#9776;
+              </button>
+            <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll" style="max-height: 100px;">
+                    <li class="nav-item active">
+                        <a class="nav-link" routerLink="/">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="watchlist">Watchlist</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="portfolio">Portfolio</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <router-outlet></router-outlet>
+
+    <div class="footer">
+        Powered by <a routerLink="/">Finhub</a>
+    </div>
+</div>

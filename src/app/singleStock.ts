@@ -1,0 +1,23 @@
+export interface SingleStock {
+    country: any,
+    currency: any,
+    exchange: any,
+    finnhubIndustry: any,
+    ipo: any,
+    logo: any,
+    marketCapitalization: any,
+    name: any,
+    phone: any,
+    shareOutstanding: any,
+    ticker: any,
+    weburl: any,
+    c: any,
+    d: any,
+    dp: any,
+    h: any,
+    l: any,
+    o: any,
+    pc: any,
+    t: any,
+    peers: any
+}

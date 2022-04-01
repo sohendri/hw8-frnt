@@ -1,0 +1,98 @@
+<div class="section mainSection">
+    <div class="subSection subsection-portfolio">
+        <h3 class="stock-header">My Portfolio</h3>
+        <h5 class="stock-subHeader">Money in Wallet: <span>${{balance}}</span></h5>
+        <div class="alert alert-success portfolioEmpty" role="alert" *ngIf="showBought">
+            You bought the stock.
+        </div>
+        <div class="alert alert-danger portfolioEmpty" role="alert" *ngIf="showSold">
+            You sold the stock.
+        </div>
+        <ul class="portfolio">
+            <li class="listItem" *ngFor="let stock of portfolioArr">
+                <div class="item-header">
+                    <h5><span class="stockTicker">{{stock[0].ticker}}</span> <span class="stockName">{{stock[0].name}}</span></h5>
+                </div>
+                <div class="item-desc">
+                    <div class="item-desc-left">
+                        <p>
+                            <span>Quantity: </span> <span>{{stock[2]}}</span>
+                        </p>
+                        <p>
+                            <span>Avg. Cost/Share: </span> <span>{{stock[3]/stock[2]}}</span>
+                        </p>
+                        <p>
+                            <span>Total Cost: </span> <span>{{stock[3]}}</span>
+                        </p>
+                    </div>
+                    <div class="item-dsec-right">
+                        <p>
+                            <span>Change: </span> <span class="col-grn txt-bld">{{stock[1].d}}</span>
+                        </p>
+                        <p>
+                            <span>Current price: </span> <span class="col-grn txt-bld">{{stock[1].c}}</span>
+                        </p>
+                        <p>
+                            <span>Market value: </span> <span class="col-grn txt-bld">{{stock[1].c*stock[2]}}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="item-footer">
+                    <button class="btn btn-primary btn-sm" (click)="openModal2($event)">Buy</button>
+                    <button class="btn btn-danger btn-sm" (click)="openModal($event, stock[2])">Sell</button>
+                </div>
+            </li>
+        </ul>
+        <div class="alert alert-warning portfolioEmpty" role="alert" *ngIf="portfolioEmpty">
+            Currently you don't have any stock in your watchlist.
+        </div>
+    </div>
+</div>
+
+<!-- Sell Modal -->
+<div class="modal fade" id="sellModalPF" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" *ngIf="buyingStockArr[0]">
+            <div class="modal-header">
+                <h5 class="modal-title">{{buyingStockArr[0].ticker}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Current price: <span>{{buyingStockArr[1].c}}</span></p>
+                <p>Money in wallet: <span>{{balance}}</span></p>
+                <p>Quantity: <input type="number" (keydown)="getValueSell($event)"></p>
+                <p *ngIf="this.balance - this.total < 0" style="color: red;">Not enough money in wallet</p>
+            </div>
+            <div class="modal-footer">
+                <p>Total: <span>{{total}}</span></p>
+                <button type="button" class="btn btn-success" [disabled]="sellDisabled" (click)="sellStock($event)">Sell</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Buy Modal -->
+<div class="modal fade" id="buyModalPF" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" *ngIf="buyingStockArr[0]">
+            <div class="modal-header">
+                <h5 class="modal-title">{{buyingStockArr[0].ticker}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal2()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Current price: <span>{{buyingStockArr[1].c}}</span></p>
+                <p>Money in wallet: <span>{{balance}}</span></p>
+                <p>Quantity: <input type="number" (keydown)="getValueBuy($event)"></p>
+                <p *ngIf="this.balance - this.total < 0" style="color: red;">Not enough money in wallet</p>
+            </div>
+            <div class="modal-footer">
+                <p>Total: <span>{{total}}</span></p>
+                <button type="button" class="btn btn-success" [disabled]="buyDisabled" (click)="buyStock($event)">Buy</button>
+            </div>
+        </div>
+    </div>
+</div>

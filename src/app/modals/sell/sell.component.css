@@ -1,0 +1,14 @@
+button.close {
+    height: fit-content;
+    font-size: 24px;
+    background: transparent;
+    border: 0px solid transparent;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}

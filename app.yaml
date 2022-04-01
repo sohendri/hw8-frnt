@@ -1,0 +1,9 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+handlers:
+- url: /
+  static_files: dist/front/index.html
+  upload: dist/front/index.html
+- url: /
+  static_dir: dist/front

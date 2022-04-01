@@ -1,0 +1,21 @@
+<div class="section section1 mainSection">
+    <div class="subSection subsection1 subsection-search">
+        <h3 class="stock-header">STOCK SEARCH</h3>
+        <form class="form-inline my-2 my-lg-0">
+            <mat-form-field>
+                <mat-label>
+                    Search Stocks
+                </mat-label>
+                <input matInput type="search" class="form-control mr-sm-2 search-box" (keyup)="searchStock($event)" [matAutocomplete]="stock">
+                <mat-autocomplete #stock="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let stock of data" [value]="stock.symbol" (click)="selectStock(stock)">
+                        <span>
+                            <span>{{stock.symbol}}</span> |
+                        <span>{{stock.description}}</span>
+                        </span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+        </form>
+    </div>
+</div>
