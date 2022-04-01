@@ -1,0 +1,71 @@
+button.close {
+    height: fit-content;
+    font-size: 24px;
+    background: transparent;
+    border: 0px solid transparent;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    height: 50px;
+    width: 50px;
+}
+
+.highlight {
+    color: darkgoldenrod;
+}
+
+.highcharts-container {
+    width: 1000px !important;
+}
+
+.pill-chart-insight {
+    width: 950px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.pill-chart-insight h5 {
+    width: 100%;
+    text-align: center;
+}
+
+.pill-chart-insight table {
+    width: 55%;
+}
+
+li.pill-news {
+    cursor: pointer;
+}
+
+.news-share {
+    margin: 5px;
+    padding: 16px 20px;
+    border: 1px solid #707070;
+}
+
+.modal-header {
+    align-items: flex-start !important;
+}
+
+@media only screen and (max-width:400px) {
+    .pill-chart-insight {
+        width: 100vw;
+    }
+    .pill-chart-insight table {
+        width: 95%;
+    }
+    .pill-chart highcharts-chart {
+        width: 100vw !important;
+    }
+}

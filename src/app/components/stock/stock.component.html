@@ -1,0 +1,269 @@
+<div class="section section1 mainSection">
+    <div class="subSection subsection1 subsection-search">
+        <h3 class="stock-header">STOCK SEARCH</h3>
+        <form class="form-inline my-2 my-lg-0">
+            <mat-form-field>
+                <mat-label>
+                    Search Stocks
+                </mat-label>
+                <input matInput type="search" class="form-control mr-sm-2 search-box" (keyup)="searchStock($event)" [matAutocomplete]="stock">
+                <mat-autocomplete #stock="matAutocomplete" [displayWith]="displayFn">
+                    <mat-option *ngFor="let stock of data" [value]="stock.symbol" (click)="selectStock(stock)">
+                        <span>
+                            <span>{{stock.symbol}}</span> |
+                        <span>{{stock.description}}</span>
+                        </span>
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <!-- to be used later -->
+            <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
+        </form>
+        <!-- <span #dataElm>{{data[0].description}}</span> -->
+    </div>
+    <div class="subSection subSection2 subSection-result">
+        <div class="details-top">
+            <div class="alert alert-success alert-dismissible fade show" role="alert" *ngIf="status2">
+                {{stockData.ticker}} added to your watchlist.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" *ngIf="!status3 && !status2">
+                {{stockData.ticker}} removed from your watchlist.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="details-top-left">
+                <h3 class="left-header">
+                    <span>{{stockData.ticker}}</span>
+                    <span class="material-icons" [ngClass]="status2 ? 'highlight' : ''" (click)="addOrRemoveFromWatchlist($event)">&#xe83a;</span>
+                </h3>
+                <h5 class="left-company">{{stockData.name}}</h5>
+                <small class="left-details">{{stockData.exchange}}</small>
+                <button class="btn btn-sm btn-success" (click)="openModalBuy()">Buy</button> &nbsp;
+                <button class="btn btn-sm btn-danger" [ngClass]="status ? 'show' : 'hide'" (click)="openModalSell()">Sell</button>
+            </div>
+            <div class="companyLogo"><img src="{{stockData.logo}}" alt="" class="logo"></div>
+            <div class="details-top-right">
+                <h3 class="right-header">
+                    <span class="col-grn" *ngIf="stockPriceUp">{{stockPrice.c}}</span>
+                    <span class="col-red" *ngIf="!stockPriceUp">{{stockPrice.c}}</span>
+                </h3>
+                <h5 class="right-company col-grn" *ngIf="stockPriceUp">
+                    <span class="material-icons">&#xe5c7;</span>
+                    <span><span>{{stockPrice.d}}</span><span>({{stockPrice.dp}}%)</span></span>
+                </h5>
+                <h5 class="right-company col-red" *ngIf="!stockPriceUp">
+                    <span class="material-icons">&#xe5c5;</span>
+                    <span><span>{{stockPrice.d}}</span><span>({{stockPrice.dp}}%)</span></span>
+                </h5>
+                <small class="right-details">{{stockPrice.t*1000 | date:'YYYY MM dd h:mm:ss a'}}</small>
+            </div>
+        </div>
+        <div class="market-info">
+            <p class="market-info-text col-grn" *ngIf="marketOpen">
+                Market is open
+            </p>
+            <p class="market-info-text col-red" *ngIf="!marketOpen">
+                Market closed for today
+            </p>
+        </div>
+        <div class="details-bottom">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs nav nav-pills nav-fill">
+                <li [ngbNavItem]="1" class="nav-item">
+                    <a ngbNavLink class="nav-link">Summary</a>
+                    <ng-template ngbNavContent>
+                        <div class="pill-details">
+                            <div class="pill-left">
+                                <div class="summary-price">
+                                    <p>High price: <span>{{stockPrice.h}}</span></p>
+                                    <p>Low Price <span>{{stockPrice.l}}</span></p>
+                                    <p>Open price: <span>{{stockPrice.o}}</span></p>
+                                    <p>Prev. close: <span>{{stockPrice.pc}}</span></p>
+                                </div>
+                                <div class="summary-company-info">
+                                    <h4>About the company</h4>
+                                    <p>IPO date: <span>{{stockData.ipo}}</span></p>
+                                    <p>Industry: <span>{{stockData.finnhubIndustry}}</span></p>
+                                    <p>Webpage:
+                                        <span><a href="{{stockData.weburl}}">{{stockData.weburl}}</a></span>
+                                    </p>
+                                    <p>Company Peers:
+                                        <a routerLink="/search/{{stockPeers[1]}}" (click)="refresh(stockPeers[1])">{{stockPeers[1]}}</a>,
+                                        <a routerLink="/search/{{stockPeers[2]}}" (click)="refresh(stockPeers[2])">{{stockPeers[2]}}</a>,
+                                        <a routerLink="/search/{{stockPeers[3]}}" (click)="refresh(stockPeers[3])">{{stockPeers[3]}}</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="pill-right">
+                                <div class="summary-chart">
+                                    <!-- <img src="../../assets/img/chart_1.png" alt="Chart"> -->
+                                    <!-- <div class="chart" [chart]="chart"></div> -->
+                                    <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions" class="chart" style="width: 100%; height: 400px; display: block;">
+                                    </highcharts-chart>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2" class="nav-item">
+                    <a ngbNavLink class="nav-link">Top news</a>
+                    <ng-template ngbNavContent>
+                        <ul class="pill-details">
+                            <li class="pill-news" *ngFor="let news of stockAllNews" (click)="selectNews(news)">
+                                <img src="{{news.image}}" alt="News image" class="pill-img">
+                                <p class="pill-text">{{news.headline}}</p>
+                            </li>
+                        </ul>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="3" class="nav-item">
+                    <a ngbNavLink class="nav-link">Charts</a>
+                    <ng-template ngbNavContent>
+                        <div class="pill-details">
+                            <div class="pill-chart">
+                                <!-- <img src="../../assets/img/charts2.png" alt=""> -->
+                                <highcharts-chart [Highcharts]="highchartsSMA" [options]="chartOptionsSMA" style="width: 950px; height: 400px; display: block;">
+                                </highcharts-chart>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="4" class="nav-item">
+                    <a ngbNavLink class="nav-link">Insights</a>
+                    <ng-template ngbNavContent>
+                        <div class="pill-details">
+                            <div class="pill-chart pill-chart-insight">
+                                <h5>Social sentiments</h5>
+                                <!-- <div class="table-responsive"> -->
+                                <table class="table table-light">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">{{stockData.ticker}}</th>
+                                            <th scope="col">Reddit</th>
+                                            <th scope="col">Twitter</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total mentions</td>
+                                            <td *ngIf="stockSentiment.reddit[0]">{{stockSentiment.reddit[0].mention}}
+                                            </td>
+                                            <td *ngIf="!stockSentiment.reddit[0]">0</td>
+                                            <td *ngIf="stockSentiment.twitter[0]">{{stockSentiment.twitter[0].mention}}
+                                            </td>
+                                            <td *ngIf="!stockSentiment.twitter[0]">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Positive mentions</td>
+                                            <td *ngIf="stockSentiment.reddit[0]">
+                                                {{stockSentiment.reddit[0].positiveMention}}</td>
+                                            <td *ngIf="!stockSentiment.reddit[0]">0</td>
+                                            <td *ngIf="stockSentiment.twitter[0]">
+                                                {{stockSentiment.twitter[0].positiveMention}}</td>
+                                            <td *ngIf="!stockSentiment.twitter[0]">0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Negative mentions</td>
+                                            <td *ngIf="stockSentiment.reddit[0]">
+                                                {{stockSentiment.reddit[0].negativeMention}}</td>
+                                            <td *ngIf="!stockSentiment.reddit[0]">0</td>
+                                            <td *ngIf="stockSentiment.twitter[0]">
+                                                {{stockSentiment.twitter[0].negativeMention}}</td>
+                                            <td *ngIf="!stockSentiment.twitter[0]">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- </div> -->
+                                <highcharts-chart [Highcharts]="highchartsRec" [options]="chartOptionsRec" style="width: 450px; height: 400px; display: block;">
+                                </highcharts-chart>
+                                <highcharts-chart [Highcharts]="highchartsSur" [options]="chartOptionsSur" style="width: 450px; height: 400px; display: block;">
+                                </highcharts-chart>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Buy Modal -->
+<div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{stockData.ticker}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModalBuy()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Current price: <span>{{stockPrice.c}}</span></p>
+                <p>Money in wallet: <span>{{localBalance}}</span></p>
+                <p>Quantity: <input type="number" min="1" (keydown)="getValue($event)"></p>
+                <p *ngIf="this.localBalance - this.total < 0" style="color: red;">Not enough money in wallet</p>
+            </div>
+            <div class="modal-footer">
+                <p>Total: <span>{{total}}</span></p>
+                <button type="button" class="btn btn-success" (click)="clickEvent()" [disabled]="buyDisabled">Buy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sell modal -->
+<div class="modal fade" id="sellModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">GOOGL</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModalSell()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Current price: <span>{{stockPrice.c}}</span></p>
+                <p>Money in wallet: <span>{{localBalance}}</span></p>
+                <p>Quantity: <input type="number" min="1" (keydown)="getValue($event)"></p>
+            </div>
+            <div class="modal-footer">
+                <p>Total: <span>{{total}}</span></p>
+                <button type="button" class="btn btn-success" disabled>Sell</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- News modal -->
+<div class="modal fade" id="newsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="wrappingDiv">
+                    <h3 class="modal-title" style="margin-bottom: 4px;">{{newsSource}}</h3>
+                    <p>{{newsDatetime*1000 | date:'YYYY MM dd h:mm:ss a'}}</p>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModalNews()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>{{newsHeadline}}</h5>
+                <p>
+                    <span>{{newsSummary}}</span>
+                    <br>
+                    <span>For more click <a href="{{newsUrl}}" target="_blank">here</a>.</span>
+                </p>
+                <div class="news-share">
+                    <p>Share</p>
+                    <a href="https://twitter.com"><img src="https://th.bing.com/th/id/R.3f7189662f19f8318fc75252deee723a?rik=Qa956Np1tp8Zcg&riu=http%3a%2f%2f1000logos.net%2fwp-content%2fuploads%2f2017%2f06%2fTwitter-Logo.png&ehk=6ekNd2ZmhpvFDGRZF19QcumP9fb8pZRkwrbFbK%2bpULA%3d&risl=&pid=ImgRaw&r=0"
+                            alt="" height="35" width="35"></a>
+                    &nbsp;&nbsp;&nbsp;
+                    <a href="https://facebook.com"><img src="https://th.bing.com/th/id/R.6ce771b4cc7f057f08085ab6b334b71f?rik=uVuLX4sResGMKA&riu=http%3a%2f%2fpngimg.com%2fuploads%2ffacebook_logos%2ffacebook_logos_PNG19757.png&ehk=JL234rPBfx%2bf3tobhEVbPdNgJiWOhk251WyRwRAg940%3d&risl=&pid=ImgRaw&r=0"
+                            alt="" height="35" width="35"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

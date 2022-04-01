@@ -1,0 +1,71 @@
+.mainSection {
+    align-items: flex-start;
+}
+
+.subSection {
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+.stock-header {
+    text-align: left;
+}
+
+.watchlist {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.listItem {
+    cursor: pointer;
+    width: 100%;
+    margin: 1rem 0;
+    padding: 1rem 2rem 1rem 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 3px 1px #70707070;
+}
+
+.listItem>div {
+    width: 50%;
+}
+
+.itemLeft {
+    text-align: left;
+}
+
+.itemRight {
+    color: green;
+    text-align: right;
+}
+
+.itemLeft h4 {
+    text-transform: uppercase;
+}
+
+.itemLeft p {
+    margin-bottom: 0;
+}
+
+.close {
+    height: 10px !important;
+    width: 10px !important;
+    position: absolute;
+    right: 0.5rem;
+    top: 0;
+    font-weight: 600;
+}
+
+.close:hover {
+    cursor: pointer;
+}
+
+@media screen and (max-width: 400px) {
+    .subSection {
+        padding: 0 1rem;
+    }
+}

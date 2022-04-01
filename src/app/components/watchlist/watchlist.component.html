@@ -1,0 +1,21 @@
+<div class="section mainSection">
+    <div class="subSection subsection-watchlist">
+        <h3 class="stock-header">My Watchlist</h3>
+        <ul class="watchlist">
+            <li class="listItem" *ngFor="let stock of watchListArr;" (click)="selectStock(stock)">
+                <div class="itemLeft">
+                    <h4>{{stock[0].ticker}}</h4>
+                    <p>{{stock[0].name}}</p>hum
+                </div>
+                <div class="itemRight">
+                    <h4>{{stock[1].c}}</h4>
+                    <p><span>{{stock[1].d}}</span>(<span>{{stock[1].dp}}</span>)</p>
+                </div>
+                <div class="close" (click)="deleteItem($event)"><span>x</span></div>
+            </li>
+        </ul>
+        <div class="alert alert-warning" role="alert" *ngIf="!noStock">
+            Currently you don't have any stock in your watchlist.
+        </div>
+    </div>
+</div>
